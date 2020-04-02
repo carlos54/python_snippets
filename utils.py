@@ -5,7 +5,6 @@ import re
 
 CONFIG = {'TMPFOLDER': "./temps/"}
 
-
 def generate_barcode(
         codebar_payload: str,
         codebar_format: str = "interleaved2of5") -> str:
