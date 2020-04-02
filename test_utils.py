@@ -15,7 +15,7 @@ class TestUtils(unittest.TestCase):
             utils.generate_barcode("bkbla/")
             utils.generate_barcode("125", "codebar")
             
-        file = utils.generate_barcode(codebar_payload="125")
+        file = utils.generate_barcode(codebar_payload=125)
         self.assertTrue(os.path.exists(file))
         if os.path.exists(file):
             os.remove(file)
