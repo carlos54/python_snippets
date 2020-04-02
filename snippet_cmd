@@ -1,0 +1,18 @@
+
+virtual environnement python :
+setup:
+virtualenv ~/pythonvirtualenv/basic375
+
+activer :
+source ~/pythonvirtualenv/basic375/bin/activate
+
+desactiver :
+deactivate
+--------------------
+code style and check :
+pycodestyle utils.py 
+autopep8 --in-place --aggressive utils.py
+mypy utils.py
+
+--- divers
+pip freeze > requirements.txt
