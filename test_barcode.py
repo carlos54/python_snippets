@@ -30,35 +30,32 @@ class TestGenerateBarcode(unittest.TestCase):
             
 class TestBarcode(unittest.TestCase):
     def test_coordinate(self):
-        position_barcode = BarCodePosition(postion = "up_left",
+        BarCodePosition.page_with = 210
+        BarCodePosition.page_height = 297
+        
+        p = BarCodePosition(postion = "up_left",
                                            x_margin=10,
                                            y_margin=15,
                                            barcode_width=20,
                                            barcode_heigth=10)
-        self.assertTrue((10 == position_barcode.x and 15 == position_barcode.y))
+       
+        self.assertTrue((10 == p.x0 
+                         and 30 == p.x1
+                         and 15 == p.y0
+                         and 25 == p.y1))
         
-
-        position_barcode = BarCodePosition(postion = "up_right",
+        p = BarCodePosition(postion = "up_right",
                                            x_margin=10,
-                                           y_margin=5,
-                                           barcode_width=10,
+                                           y_margin=15,
+                                           barcode_width=20,
                                            barcode_heigth=10)
-        self.assertTrue((190 == position_barcode.x and 5 == position_barcode.y))
+       
+        self.assertTrue((180 == p.x0 
+                         and 200 == p.x1
+                         and 15 == p.y0
+                         and 25 == p.y1))
+    
         
-        
-        position_barcode = BarCodePosition(postion = "bottom_left",
-                                           x_margin=5,
-                                           y_margin=2,
-                                           barcode_width=10,
-                                           barcode_heigth=10)
-        self.assertTrue((5 == position_barcode.x and 285 == position_barcode.y))
-        
-        position_barcode = BarCodePosition(postion = "",
-                                           x_margin=1,
-                                           y_margin=2,
-                                           barcode_width=10,
-                                           barcode_heigth=10)
-        self.assertTrue((199 == position_barcode.x and 285 == position_barcode.y))
         
         
 
