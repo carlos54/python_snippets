@@ -8,39 +8,50 @@ from contextlib import contextmanager
 
 
 @contextmanager
-def open_pdf(filepath):
-    doc = fitz.open(src_pdf_filename)
+def open_pdf(file_path):
+    doc = fitz.open(file_path)
     try:
-        yield doc
+        modify_ok = bool(doc.permissions & fitz.PDF_PERM_MODIFY)
+        if doc.isPDF and modify_ok:
+            yield doc
     finally:
-        document.saveIncr()
-        document.close()
+        doc.saveIncr()
+        doc.close()
 
 
-def insert_barcode_in_pdf(pdf_file_path: str, barcode_payload: str,
-                          barcode_position: BarCodePosition,
-                          page_ref: int = 0,
-                          barcode_format: str = "interleaved2of5",
+def insert_barcode_in_pdf(pdf_file_path: str,
                           tmp_dir: str = "./temps/") -> None:
-
-    img_path = generate_barcode_image(barcode_payload=barcode_payload,
-                                      barcode_format=barcode_format)
-    if not img_path:
-        raise ValueError(
-            "No barcode avalaible, debug generate_barcode_image()")
-
-    page_zone = fitz.Rect(p.x0, p.y0, p.x1, p.y1)
-
+   
+    #### inner function
+    def insert_barcode(page, payload, barcode_position):
+        _, _, w, h = page.CropBox
+        #print(f"********CropBox{page.CropBox}")
+        #print(f"********MediaBox {page.MediaBox}")
+        #print(f"********barcaode {p.coordinate}")
+        p = BarCodePosition(postion=barcode_position, page_height=h,
+                            page_with=w)
+       
+        page_zone = fitz.Rect(p.x0, p.y0, p.x1, p.y1)
+        img_path = generate_barcode_image(barcode_payload=payload,
+                                          tmp_dir=tmp_dir)
+      
+        page.insertImage(rect=page_zone, filename=img_path,
+                         keep_proportion=False)
+    ####
+    
     with open_pdf(pdf_file_path) as pdf:
-        page = pdf.loadPage(page_ref)
-        page.insertImage(rect=page_zone,
-                         filename=img_path, keep_proportion=False)
+        insert_barcode(pdf[0], "000", "up_right")#flag first page begin
+        for i, page in enumerate(pdf):
+           insert_barcode(page, str(i), "bottom_right")#flag page number
+
+        insert_barcode(page, "999", "up_right")#flag last page
+    
 
 
 def generate_barcode_image(
         barcode_payload: str,
-        barcode_format: str = "interleaved2of5",
-        tmp_dir: str = "./temps/") -> str:
+        tmp_dir: str,
+        barcode_format: str = "interleaved2of5", **kwargs) -> str:
     """return path image of barcode who encapsulate
     the string value barcode_payload
     TMPFOLDER .png file barcode.
@@ -85,8 +96,7 @@ def generate_barcode_image(
     if not os.path.exists(tmp_dir):
         raise OSError
 
-    file_name = ''.join([secrets.token_hex(8), ".png"])
-    file_path = ''.join([tmp_dir, file_name])
+    file_path = os.path.join(tmp_dir, secrets.token_hex(8)+".png")
     try:
         barcode_image = treepoem.generate_barcode(barcode_type=barcode_format,
                                                   data=barcode_payload)
@@ -112,26 +122,13 @@ class BarCodePosition:
                                 y_margin=0,
                                 barcode_width=20,
                                 barcode_heigth=10)
-
-
-        param = {'name' :'./temps/380e247ac3b59b94.png',
-                **barcode.coordinate
-                }
-
-        document = FPDF()
-        document.add_page()
-        document.set_font('Arial', size=12)
-        document.cell(w=0, txt="hello world")
-        document.image(**param)
-
-        document.output("./temps/hello_world.pdf")
     """
-    page_with = 595
-    page_height = 842
 
     def __init__(self, postion: str = "up_left", barcode_width: int = 50,
-                 barcode_heigth: int = 25, x_margin: int = 1,
-                 y_margin: int = 1) -> None:
+                 barcode_heigth: int = 15, x_margin: int = 1,
+                 y_margin: int = 1,
+                 page_with:float = 595, 
+                 page_height:float = 842) -> None:
         self.barcode_heigth = barcode_heigth
         self.barcode_width = barcode_width
         self.x0 = 0
@@ -140,7 +137,8 @@ class BarCodePosition:
         self.y1 = 0
         self.x_margin = x_margin
         self.y_margin = y_margin
-
+        self.page_with = page_with
+        self.page_height = page_height
         postion = postion.casefold()
         if postion == "up_left":
             self.__calculate_up_left()

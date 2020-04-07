@@ -18,4 +18,4 @@ mypy utils.py
 pip freeze > requirements.txt
 pytest
 
-
+timedatectl set-timezone 'Europe/Luxembourg'
