@@ -17,7 +17,6 @@ class TestGenerateBarcode(unittest.TestCase):
         temp_dir = os.path.join(TMP_DIR, secrets.token_hex(8))
         os.makedirs(temp_dir)
         self.job_dir = temp_dir
-        print(f"create dir : {self.job_dir}", end = '')
 
 
     def _generate_barcode_image(self):
@@ -42,8 +41,7 @@ class TestGenerateBarcode(unittest.TestCase):
         self.assertTrue(os.path.exists(file))
 
     def test_insert_barcode_in_pdf(self):
-
-        file_orgine =  os.path.join(TMP_DIR, "do_not_delete.pdf")
+        file_orgine =  os.path.join(PWD, "static/","do_not_delete.pdf")
         job_file = os.path.join(self.job_dir, 'res_test.pdf')
         shutil.copyfile(file_orgine, job_file)
         insert_barcode_in_pdf(pdf_file_path=job_file, tmp_dir=self.job_dir)

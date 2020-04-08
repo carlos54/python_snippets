@@ -2,7 +2,14 @@ import fitz
 from api.barcode import generate_barcode_image, BarCodePosition
 
 print( fitz.PaperSize("A4"))
-
+        l = ["wkhtmltopdf",
+            "--dpi 72",
+            "--margin-top 0",
+            "--margin-left 0",
+            "--margin-right 0",
+            "--margin-bottom 0",
+            f"{file_path}.html",
+            f"{file_path}.pdf"]
 #print(f"********{}")
 
 src_pdf_filename = '/share/src/statec/mailing/test/temps/d5d705f211b4d3f7/tuto2.pdf'
