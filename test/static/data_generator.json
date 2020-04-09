@@ -1,0 +1,50 @@
+https://next.json-generator.com
+
+[
+    {
+      'repeat(5, 10)': 
+      {
+          id:'{{integer(999, 9999)}}',
+          apply_lang: [
+          {
+            'repeat(1,3)': '{{random("FR", "EN", "PT", "DE", "LU")}}',
+          }
+        ],
+          apply_vars : [{
+            name: "person_genre",
+            lang_sensitive : true,
+            lang_process: "genre()",
+            value:'{{random("M", "F")}}'
+        },
+        {  	name:"person_first",
+            lang_sensitive : false,
+            value:'{{firstName()}}'
+        },
+        {   name: "person_last",
+            lang_sensitive : false,
+            value:'{{surname()}}',
+        },
+        {   name: "email",
+            lang_sensitive : false,
+            value:'fake@email.com'
+        },
+        {   name: "phone",
+            lang_sensitive : false,
+            value:'{{phone()}}',
+        }, 
+        {   name: "address_city",
+            lang_sensitive : false,
+            value: '{{integer(1111, 9999)}} {{city()}}',
+        },
+        {   name: "address_country",
+            lang_sensitive : false,
+            value: '{{country()}}',
+        },
+        {   name: "date_example",
+            lang_sensitive : true,
+            lang_process: "date()",
+            value:"2020-05-01",
+      	}]    
+		}
+    }
+  ]
