@@ -1,11 +1,13 @@
-from flask import Flask, render_template, make_response, abort, request, json
-from flask_mail import Message
+from flask import Flask, render_template, make_response, abort, request, json, url_for
+from jinja2 import TemplateNotFound 
 import tempfile
 import os
 import secrets
 import logging
 import shutil
 import subprocess
+from jsonschema import validate, ValidationError
+import numpy
 
 from typing import Dict, List
 ##########################
@@ -18,17 +20,22 @@ app = Flask(__name__)
 PWD = os.path.dirname(__file__)
 TMP_DIR = os.path.join(PWD, 'temps/')
 LOG_DIR = os.path.join(PWD, 'logs/')
+STC_DIR = os.path.join(PWD, 'static/')
 
-app.config['PDF_DIR_PATH'] = TMP_DIR
 app.config['TEMP_DIR_PATH'] = TMP_DIR
 
-
+# Log config
 logfile_path = ''.join([LOG_DIR, "main.log"])
 logging.basicConfig(filename=logfile_path,
-                    format='%(asctime)s %(message)s', level=logging.DEBUG, filemode='w')
+                    format='%(asctime)s %(message)s',
+                    level=logging.DEBUG, filemode='w')
 logging.info('start up')
 
-
+#load validator (to only load schema one time)
+MAIL_SCHEMA = None # cannot use falsk url_for at this time
+with open(''.join([STC_DIR, "mail_validator.schema"]))as f:
+    MAIL_SCHEMA = json.loads(f.read())
+    
 @app.route("/")
 @app.route("/home")
 def home():
@@ -59,56 +66,73 @@ def replace_template(template_id, lang):
     """ replace exiting template """
     pass
 
-# "print" is this api is consider as ressource
-@app.route("/print/<print_id>", methods=["GET"])
+
+@app.route("/mail/<print_id>", methods=["GET"])
 def info_print(print_id):
     """ return print log """
     pass
 
 
-@app.route("/print", methods=["POST"])
+@app.route("/mail", methods=["POST"])
 def new_print():
     """ merge template and the respondents file 
     => return pdf file content type
     """
     
     job_id = secrets.token_hex(8)
-    logging.info("******** /print  - id : %s", job_id)
+    logging.info("******** /mail  - id : %s", job_id)
         
-    ## check posted data to process
+    ##### check post data param to process
     template_id = request.form.get('template_id') 
     if not template_id :
             abort(403, "Missing data payload - template_id : str")
-    logging.info(f"({job_id}) - template:{template_id}")
-   
+
     json_file = request.files.get("respondents")
     if not json_file :
           abort(403, """Missing data payload 
               - respondents : application/json file""")
+          
+    # check if is a valide file and valide schema
     try:
         respondents = json.loads(json_file.read())
+        validate(instance=respondents, schema=MAIL_SCHEMA)
+    except ValidationError:
+        logging.error(f"({job_id}) - respondents json application/json not valide")
+        abort(403, "respondents json application/json not valide") 
     except:
+        logging.error(f"({job_id}) - respondents json application/json file corrupt")
         abort(403, "respondents json application/json file corrupt") 
-    logging.info(f"({job_id}) - respondents file :{type(json_file)} / {len(respondents)}")
 
+    # check if all lang have it's template available
+    langs = []
+    _ = [langs.extend(r.get('apply_lang')) for r in respondents]
+    for lang in langs:
+        try:
+            render_template(f'{template_id}_{lang}.html')
+        except TemplateNotFound:
+            logging.error(f"({job_id}) - missing template {template_id}_{lang}.html")
+            abort(404, f"missing template {template_id}_{lang}.html")
+    
+    # check if "id" is unique
+    ids = [r.get('id') for r in respondents]
+    if len(ids) != len(set(ids)):
+        logging.error(f"({job_id}) - data issue : field *id* is not unique")
+        abort(403, "data issue : field *id* is not unique")
+    
+    logging.info(f"({job_id}) - data valided : {template_id} / respondents : {len(respondents)}")
+    #####
+    
     
  
-    ## create working job directory
+    ##### create working job directory
     job_work_dir = os.path.join(app.config.get('TEMP_DIR_PATH'), job_id)
     if not os.path.exists(job_work_dir):
         os.makedirs(job_work_dir)
 
     if not os.path.exists(job_work_dir):
-        abort(500, "OSError, permission mkdir job_work_dir failed")
-    
-    
-    ## save json data file received
-
-    for respondent in respondents:
-        print(respondent.get("id"))
-
-                 
-    data_file = os.path.join(job_work_dir,"data.json")
+        abort(500, "OSError, permission mkdir job_work_dir failed") 
+    # save json data file received      
+    data_file = os.path.join(job_work_dir,"data.json")    
     json_file.save(os.path.join(job_work_dir,data_file))  
        
     
@@ -134,6 +158,9 @@ def new_print():
     return make_response(job_id)
 
     """
+            if r.header != 200:
+            logging.error(f"({job_id}) - missing template {template_id}_{lang}.html")
+            abort(403, f"missing template {template_id}_{lang}.html") 
 
     # inner function
     def process_respondent(data: Dict[str, object]):

@@ -7,7 +7,6 @@
       ],
       "apply_vars": [
         {
-          "name": "person_genre",
           "lang_sensitive": true,
           "lang_process": "genre()",
           "value": "F"
@@ -54,7 +53,7 @@
       "id": 4026,
       "apply_lang": [
         "LU",
-        "EN"
+        "PT"
       ],
       "apply_vars": [
         {
@@ -209,7 +208,7 @@
       "id": 7917,
       "apply_lang": [
         "EN",
-        "EN"
+        "PT"
       ],
       "apply_vars": [
         {
@@ -412,7 +411,7 @@
     {
       "id": 9400,
       "apply_lang": [
-        "EN"
+        "PT"
       ],
       "apply_vars": [
         {
