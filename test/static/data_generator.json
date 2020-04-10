@@ -13,7 +13,7 @@ https://next.json-generator.com
           apply_vars : [{
             name: "person_genre",
             lang_sensitive : true,
-            lang_process: "genre()",
+            format_function: "genre()",
             value:'{{random("M", "F")}}'
         },
         {  	name:"person_first",
@@ -42,7 +42,7 @@ https://next.json-generator.com
         },
         {   name: "date_example",
             lang_sensitive : true,
-            lang_process: "date()",
+            format_function: "date()",
             value:"2020-05-01",
       	}]    
 		}

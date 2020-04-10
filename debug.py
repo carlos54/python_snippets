@@ -12,6 +12,16 @@ print( fitz.PaperSize("A4"))
             f"{file_path}.pdf"]
 #print(f"********{}")
 
+    
+"""
+
+    app.errorhandler(Exception)
+    def exception_logger(error):
+        """Log the exception"""
+        logging.exception(str(error))
+        return str(error)
+"""
+
 src_pdf_filename = '/share/src/statec/mailing/test/temps/d5d705f211b4d3f7/tuto2.pdf'
 dst_pdf_filename = '/share/src/statec/mailing/test/temps/d5d705f211b4d3f7/tuto2_out.pdf'
 img_filename = '/share/src/statec/mailing/test/temps/d5d705f211b4d3f7/15a96672c53c4ca8.png'

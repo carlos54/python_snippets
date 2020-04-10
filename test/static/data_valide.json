@@ -1,514 +1,102 @@
 [
-    {
-      "id": 2998,
-      "apply_lang": [
-        "DE",
-        "EN"
-      ],
-      "apply_vars": [
-        {
-          "name": "person_genre",
-          "lang_sensitive": true,
-          "lang_process": "genre()",
-          "value": "F"
-        },
-        {
-          "name": "person_first",
-          "lang_sensitive": false,
-          "value": "Ramona"
-        },
-        {
-          "name": "person_last",
-          "lang_sensitive": false,
-          "value": "Benjamin"
-        },
-        {
-          "name": "email",
-          "lang_sensitive": false,
-          "value": "fake@email.com"
-        },
-        {
-          "name": "phone",
-          "lang_sensitive": false,
-          "value": "(832) 582-2121"
-        },
-        {
-          "name": "address_city",
-          "lang_sensitive": false,
-          "value": "4815 Hollymead"
-        },
-        {
-          "name": "address_country",
-          "lang_sensitive": false,
-          "value": "Monaco"
-        },
-        {
-          "name": "date_example",
-          "lang_sensitive": true,
-          "lang_process": "date()",
-          "value": "2020-05-01"
-        }
-      ]
-    },
-    {
-      "id": 4026,
-      "apply_lang": [
-        "LU",
-        "EN"
-      ],
-      "apply_vars": [
-        {
-          "name": "person_genre",
-          "lang_sensitive": true,
-          "lang_process": "genre()",
-          "value": "F"
-        },
-        {
-          "name": "person_first",
-          "lang_sensitive": false,
-          "value": "Greta"
-        },
-        {
-          "name": "person_last",
-          "lang_sensitive": false,
-          "value": "Perez"
-        },
-        {
-          "name": "email",
-          "lang_sensitive": false,
-          "value": "fake@email.com"
-        },
-        {
-          "name": "phone",
-          "lang_sensitive": false,
-          "value": "(846) 529-2258"
-        },
-        {
-          "name": "address_city",
-          "lang_sensitive": false,
-          "value": "1495 Dubois"
-        },
-        {
-          "name": "address_country",
-          "lang_sensitive": false,
-          "value": "Italy"
-        },
-        {
-          "name": "date_example",
-          "lang_sensitive": true,
-          "lang_process": "date()",
-          "value": "2020-05-01"
-        }
-      ]
-    },
-    {
-      "id": 3134,
-      "apply_lang": [
-        "LU",
-        "FR",
-        "DE"
-      ],
-      "apply_vars": [
-        {
-          "name": "person_genre",
-          "lang_sensitive": true,
-          "lang_process": "genre()",
-          "value": "M"
-        },
-        {
-          "name": "person_first",
-          "lang_sensitive": false,
-          "value": "Wiley"
-        },
-        {
-          "name": "person_last",
-          "lang_sensitive": false,
-          "value": "Blackwell"
-        },
-        {
-          "name": "email",
-          "lang_sensitive": false,
-          "value": "fake@email.com"
-        },
-        {
-          "name": "phone",
-          "lang_sensitive": false,
-          "value": "(951) 533-2641"
-        },
-        {
-          "name": "address_city",
-          "lang_sensitive": false,
-          "value": "1295 Richmond"
-        },
-        {
-          "name": "address_country",
-          "lang_sensitive": false,
-          "value": "Aruba"
-        },
-        {
-          "name": "date_example",
-          "lang_sensitive": true,
-          "lang_process": "date()",
-          "value": "2020-05-01"
-        }
-      ]
-    },
-    {
-      "id": 2057,
-      "apply_lang": [
-        "LU",
-        "FR",
-        "EN"
-      ],
-      "apply_vars": [
-        {
-          "name": "person_genre",
-          "lang_sensitive": true,
-          "lang_process": "genre()",
-          "value": "F"
-        },
-        {
-          "name": "person_first",
-          "lang_sensitive": false,
-          "value": "Elise"
-        },
-        {
-          "name": "person_last",
-          "lang_sensitive": false,
-          "value": "Mullen"
-        },
-        {
-          "name": "email",
-          "lang_sensitive": false,
-          "value": "fake@email.com"
-        },
-        {
-          "name": "phone",
-          "lang_sensitive": false,
-          "value": "(974) 517-2057"
-        },
-        {
-          "name": "address_city",
-          "lang_sensitive": false,
-          "value": "1193 Callaghan"
-        },
-        {
-          "name": "address_country",
-          "lang_sensitive": false,
-          "value": "Bouvet Island"
-        },
-        {
-          "name": "date_example",
-          "lang_sensitive": true,
-          "lang_process": "date()",
-          "value": "2020-05-01"
-        }
-      ]
-    },
-    {
-      "id": 7917,
-      "apply_lang": [
-        "EN",
-        "EN"
-      ],
-      "apply_vars": [
-        {
-          "name": "person_genre",
-          "lang_sensitive": true,
-          "lang_process": "genre()",
-          "value": "M"
-        },
-        {
-          "name": "person_first",
-          "lang_sensitive": false,
-          "value": "Gertrude"
-        },
-        {
-          "name": "person_last",
-          "lang_sensitive": false,
-          "value": "Wooten"
-        },
-        {
-          "name": "email",
-          "lang_sensitive": false,
-          "value": "fake@email.com"
-        },
-        {
-          "name": "phone",
-          "lang_sensitive": false,
-          "value": "(836) 462-2546"
-        },
-        {
-          "name": "address_city",
-          "lang_sensitive": false,
-          "value": "8859 Lookingglass"
-        },
-        {
-          "name": "address_country",
-          "lang_sensitive": false,
-          "value": "Wallis and Futuna Islands"
-        },
-        {
-          "name": "date_example",
-          "lang_sensitive": true,
-          "lang_process": "date()",
-          "value": "2020-05-01"
-        }
-      ]
-    },
-    {
-      "id": 9819,
-      "apply_lang": [
-        "LU",
-        "FR"
-      ],
-      "apply_vars": [
-        {
-          "name": "person_genre",
-          "lang_sensitive": true,
-          "lang_process": "genre()",
-          "value": "M"
-        },
-        {
-          "name": "person_first",
-          "lang_sensitive": false,
-          "value": "Yvonne"
-        },
-        {
-          "name": "person_last",
-          "lang_sensitive": false,
-          "value": "Bradshaw"
-        },
-        {
-          "name": "email",
-          "lang_sensitive": false,
-          "value": "fake@email.com"
-        },
-        {
-          "name": "phone",
-          "lang_sensitive": false,
-          "value": "(804) 561-3949"
-        },
-        {
-          "name": "address_city",
-          "lang_sensitive": false,
-          "value": "6133 Convent"
-        },
-        {
-          "name": "address_country",
-          "lang_sensitive": false,
-          "value": "Malaysia"
-        },
-        {
-          "name": "date_example",
-          "lang_sensitive": true,
-          "lang_process": "date()",
-          "value": "2020-05-01"
-        }
-      ]
-    },
-    {
-      "id": 6253,
-      "apply_lang": [
-        "DE",
-        "FR"
-      ],
-      "apply_vars": [
-        {
-          "name": "person_genre",
-          "lang_sensitive": true,
-          "lang_process": "genre()",
-          "value": "F"
-        },
-        {
-          "name": "person_first",
-          "lang_sensitive": false,
-          "value": "Beatriz"
-        },
-        {
-          "name": "person_last",
-          "lang_sensitive": false,
-          "value": "Austin"
-        },
-        {
-          "name": "email",
-          "lang_sensitive": false,
-          "value": "fake@email.com"
-        },
-        {
-          "name": "phone",
-          "lang_sensitive": false,
-          "value": "(814) 436-2655"
-        },
-        {
-          "name": "address_city",
-          "lang_sensitive": false,
-          "value": "4924 Katonah"
-        },
-        {
-          "name": "address_country",
-          "lang_sensitive": false,
-          "value": "Cocos (Keeling Islands)"
-        },
-        {
-          "name": "date_example",
-          "lang_sensitive": true,
-          "lang_process": "date()",
-          "value": "2020-05-01"
-        }
-      ]
-    },
-    {
-      "id": 3718,
-      "apply_lang": [
-        "FR",
-        "LU"
-      ],
-      "apply_vars": [
-        {
-          "name": "person_genre",
-          "lang_sensitive": true,
-          "lang_process": "genre()",
-          "value": "F"
-        },
-        {
-          "name": "person_first",
-          "lang_sensitive": false,
-          "value": "Hunter"
-        },
-        {
-          "name": "person_last",
-          "lang_sensitive": false,
-          "value": "Patterson"
-        },
-        {
-          "name": "email",
-          "lang_sensitive": false,
-          "value": "fake@email.com"
-        },
-        {
-          "name": "phone",
-          "lang_sensitive": false,
-          "value": "(871) 490-2290"
-        },
-        {
-          "name": "address_city",
-          "lang_sensitive": false,
-          "value": "5422 Harmon"
-        },
-        {
-          "name": "address_country",
-          "lang_sensitive": false,
-          "value": "Sudan"
-        },
-        {
-          "name": "date_example",
-          "lang_sensitive": true,
-          "lang_process": "date()",
-          "value": "2020-05-01"
-        }
-      ]
-    },
-    {
-      "id": 9400,
-      "apply_lang": [
-        "EN"
-      ],
-      "apply_vars": [
-        {
-          "name": "person_genre",
-          "lang_sensitive": true,
-          "lang_process": "genre()",
-          "value": "M"
-        },
-        {
-          "name": "person_first",
-          "lang_sensitive": false,
-          "value": "Pacheco"
-        },
-        {
-          "name": "person_last",
-          "lang_sensitive": false,
-          "value": "Harvey"
-        },
-        {
-          "name": "email",
-          "lang_sensitive": false,
-          "value": "fake@email.com"
-        },
-        {
-          "name": "phone",
-          "lang_sensitive": false,
-          "value": "(977) 599-2746"
-        },
-        {
-          "name": "address_city",
-          "lang_sensitive": false,
-          "value": "4434 Aurora"
-        },
-        {
-          "name": "address_country",
-          "lang_sensitive": false,
-          "value": "Oman"
-        },
-        {
-          "name": "date_example",
-          "lang_sensitive": true,
-          "lang_process": "date()",
-          "value": "2020-05-01"
-        }
-      ]
-    },
-    {
-      "id": 4741,
-      "apply_lang": [
-        "DE",
-        "FR",
-        "LU"
-      ],
-      "apply_vars": [
-        {
-          "name": "person_genre",
-          "lang_sensitive": true,
-          "lang_process": "genre()",
-          "value": "M"
-        },
-        {
-          "name": "person_first",
-          "lang_sensitive": false,
-          "value": "Rutledge"
-        },
-        {
-          "name": "person_last",
-          "lang_sensitive": false,
-          "value": "Snyder"
-        },
-        {
-          "name": "email",
-          "lang_sensitive": false,
-          "value": "fake@email.com"
-        },
-        {
-          "name": "phone",
-          "lang_sensitive": false,
-          "value": "(961) 574-2680"
-        },
-        {
-          "name": "address_city",
-          "lang_sensitive": false,
-          "value": "2948 Bladensburg"
-        },
-        {
-          "name": "address_country",
-          "lang_sensitive": false,
-          "value": "Grenada"
-        },
-        {
-          "name": "date_example",
-          "lang_sensitive": true,
-          "lang_process": "date()",
-          "value": "2020-05-01"
-        }
-      ]
-    }
-  ]
+  {
+    "id": 7261,
+    "apply_lang": [
+      "FR"
+    ],
+    "apply_vars": [
+      {
+        "name": "person_genre",
+        "lang_sensitive": true,
+        "format_function": "genre()",
+        "value": "M"
+      },
+      {
+        "name": "person_first",
+        "lang_sensitive": false,
+        "value": "Moss"
+      },
+      {
+        "name": "person_last",
+        "lang_sensitive": false,
+        "value": "Mcleod"
+      },
+      {
+        "name": "email",
+        "lang_sensitive": false,
+        "value": "fake@email.com"
+      },
+      {
+        "name": "phone",
+        "lang_sensitive": false,
+        "value": "(839) 556-3587"
+      },
+      {
+        "name": "address_city",
+        "lang_sensitive": false,
+        "value": "5688 Falmouth"
+      },
+      {
+        "name": "address_country",
+        "lang_sensitive": false,
+        "value": "Comoros"
+      },
+      {
+        "name": "date_example",
+        "lang_sensitive": true,
+        "format_function": "date()",
+        "value": "2020-05-01"
+      }
+    ]
+  },
+  {
+    "id": 9738,
+    "apply_lang": [
+      "EN", "DE"
+    ],
+    "apply_vars": [
+      {
+        "name": "person_genre",
+        "lang_sensitive": true,
+        "format_function": "genre()",
+        "value": "M"
+      },
+      {
+        "name": "person_first",
+        "lang_sensitive": false,
+        "value": "Cheryl"
+      },
+      {
+        "name": "person_last",
+        "lang_sensitive": false,
+        "value": "Padilla"
+      },
+      {
+        "name": "email",
+        "lang_sensitive": false,
+        "value": "fake@email.com"
+      },
+      {
+        "name": "phone",
+        "lang_sensitive": false,
+        "value": "(928) 408-2749"
+      },
+      {
+        "name": "address_city",
+        "lang_sensitive": false,
+        "value": "5364 Dundee"
+      },
+      {
+        "name": "address_country",
+        "lang_sensitive": false,
+        "value": "New Zealand"
+      },
+      {
+        "name": "date_example",
+        "lang_sensitive": true,
+        "format_function": "date()",
+        "value": "2020-05-01"
+      }
+    ]
+  }
+]
