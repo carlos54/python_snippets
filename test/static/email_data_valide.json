@@ -1,0 +1,108 @@
+[
+    {
+      "id": 7261,
+  
+      "recipients": ["abs@abc.com" ],
+
+      "apply_lang": [
+        "FR"
+      ],
+      "apply_vars": [
+        {
+          "name": "person_genre",
+          "lang_sensitive": true,
+          "format_function": "genre()",
+          "value": "M"
+        },
+        {
+          "name": "person_first",
+          "lang_sensitive": false,
+          "value": "Moss"
+        },
+        {
+          "name": "person_last",
+          "lang_sensitive": false,
+          "value": "Mcleod"
+        },
+        {
+          "name": "email",
+          "lang_sensitive": false,
+          "value": "fake@email.com"
+        },
+        {
+          "name": "phone",
+          "lang_sensitive": false,
+          "value": "(839) 556-3587"
+        },
+        {
+          "name": "address_city",
+          "lang_sensitive": false,
+          "value": "5688 Falmouth"
+        },
+        {
+          "name": "address_country",
+          "lang_sensitive": false,
+          "value": "Comoros"
+        },
+        {
+          "name": "date_example",
+          "lang_sensitive": true,
+          "format_function": "date()",
+          "value": "2020-05-01"
+        }
+      ]
+    },
+    {
+      "id": 7262,
+  
+      "recipients": ["abs2@abc.com" ],
+  
+      "apply_lang": [
+        "FR", "EN"
+      ],
+      "apply_vars": [
+        {
+          "name": "person_genre",
+          "lang_sensitive": true,
+          "format_function": "genre()",
+          "value": "M"
+        },
+        {
+          "name": "person_first",
+          "lang_sensitive": false,
+          "value": "Moss"
+        },
+        {
+          "name": "person_last",
+          "lang_sensitive": false,
+          "value": "Mcleod"
+        },
+        {
+          "name": "email",
+          "lang_sensitive": false,
+          "value": "fake@email.com"
+        },
+        {
+          "name": "phone",
+          "lang_sensitive": false,
+          "value": "(839) 556-3587"
+        },
+        {
+          "name": "address_city",
+          "lang_sensitive": false,
+          "value": "5688 Falmouth"
+        },
+        {
+          "name": "address_country",
+          "lang_sensitive": false,
+          "value": "Comoros"
+        },
+        {
+          "name": "date_example",
+          "lang_sensitive": true,
+          "format_function": "date()",
+          "value": "2020-05-01"
+        }
+      ]
+    }
+  ]

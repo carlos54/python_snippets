@@ -23,7 +23,13 @@ def merge_pdf(dir_path:str, file_name:str = None) -> str:
     return os.path.join(dir_path,file_name)
 
 def format_genre(lang:str, genre:str) -> str :
-    return "Monsieur"
+    decode = {
+        ('fr', 'm'): "Monsieur",
+        ('en', 'm'): "Mister"
+    }
+    return decode.get((lang.casefold(), genre.casefold()), 'not_define')
+  
+   
 
 def format_date(lang:str, date:str) -> str :
     return "2099-12-31"

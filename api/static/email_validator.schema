@@ -1,12 +1,17 @@
 {
     "title": "TEMPLATE DATA SCHEMA VALIDATION",
-    "description": "excpected file schema for api */mail* ressource",
+    "description": "excpected file schema for api */email* ressource",
     "type": "array",
     "items":{
         "type": "object",
-        "allOf": [{"required": ["id", "apply_lang", "apply_vars"]}],
+        "allOf": [{"required": ["id", "recipients", "apply_lang", "apply_vars"]}],
         "properties":{
             "id":{"type": "number"},
+            "recipients":{
+                "type": "array",
+                "minItems" :1,
+                "items":{ "type": "string", "format": "email" }
+            },
             "apply_lang":{
                 "type": "array",
                 "minItems" :1,

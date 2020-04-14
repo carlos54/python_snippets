@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Email subject</title>  
+</head>
+<body>
+
+{% if apply_lang_fr %}
+<hr></hr>
+LANGUE : Français
+<p>
+    <b> Nom : {{ person_first }} - {{ person_last }}</b>
+</p>
+{% endif %}
+
+
+{% if apply_lang_en %}
+<hr></hr>
+LANGUE : English
+<p>
+    <b> Name : {{ person_first }} - {{ person_last }}</b>
+</p>
+{% endif %}
+
+
+</body></html>
