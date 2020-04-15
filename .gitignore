@@ -2,6 +2,6 @@
 __pycache__/
 noteconfigmachine.txt
 temps.txt
-test/temps/
-api/temps/
-api/logs/
+/temps/
+/test/temps/
+/logs/

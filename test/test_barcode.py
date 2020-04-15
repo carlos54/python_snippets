@@ -3,8 +3,7 @@ import os
 import stat
 import shutil
 import secrets
-from pathlib import Path
-from api.barcode import BarCodePosition, generate_barcode_image, insert_barcode_in_pdf
+from mailing.resources.barcode import BarCodePosition, generate_barcode_image
 
 
 PWD = os.path.dirname(__file__)
@@ -19,8 +18,7 @@ class TestGenerateBarcode(unittest.TestCase):
         self.job_dir = temp_dir
 
 
-    def _generate_barcode_image(self):
-        
+    def generate_barcode_image(self):
         
         with self.assertRaises(TypeError):
             generate_barcode_image(None, tmp_dir=self.job_dir)
@@ -39,13 +37,6 @@ class TestGenerateBarcode(unittest.TestCase):
         file = generate_barcode_image(barcode_payload="125",
                                       barcode_format="qrcode", tmp_dir=self.job_dir)
         self.assertTrue(os.path.exists(file))
-
-    def test_insert_barcode_in_pdf(self):
-        file_orgine =  os.path.join(PWD, "static/","do_not_delete.pdf")
-        job_file = os.path.join(self.job_dir, 'res_test.pdf')
-        shutil.copyfile(file_orgine, job_file)
-        insert_barcode_in_pdf(pdf_file_path=job_file, tmp_dir=self.job_dir)
-
 
 
 class TestBarcode(unittest.TestCase):

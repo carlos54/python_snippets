@@ -3,49 +3,6 @@ import secrets
 import re
 import treepoem  # type: ignore
 from typing import Dict
-import fitz  # https://pymupdf.readthedocs.io/en/latest/
-from contextlib import contextmanager
-
-
-@contextmanager
-def open_pdf(file_path):
-    doc = fitz.open(file_path)
-    try:
-        modify_ok = bool(doc.permissions & fitz.PDF_PERM_MODIFY)
-        if doc.isPDF and modify_ok:
-            yield doc
-    finally:
-        doc.saveIncr()
-        doc.close()
-
-
-def insert_barcode_in_pdf(pdf_file_path: str,
-                          tmp_dir: str = "./temps/") -> None:
-   
-    #### inner function
-    def insert_barcode(page, payload, barcode_position):
-        _, _, w, h = page.CropBox
-        #print(f"********CropBox{page.CropBox}")
-        #print(f"********MediaBox {page.MediaBox}")
-        #print(f"********barcaode {p.coordinate}")
-        p = BarCodePosition(postion=barcode_position, page_height=h,
-                            page_with=w)
-       
-        page_zone = fitz.Rect(p.x0, p.y0, p.x1, p.y1)
-        img_path = generate_barcode_image(barcode_payload=payload,
-                                          tmp_dir=tmp_dir)
-      
-        page.insertImage(rect=page_zone, filename=img_path,
-                         keep_proportion=False)
-    ####
-    
-    with open_pdf(pdf_file_path) as pdf:
-        insert_barcode(pdf[0], "000", "up_right")#flag first page begin
-        for i, page in enumerate(pdf):
-           insert_barcode(page, str(i), "bottom_right")#flag page number
-
-        insert_barcode(page, "999", "up_right")#flag last page
-    
 
 
 def generate_barcode_image(
