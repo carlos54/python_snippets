@@ -6,6 +6,7 @@ import secrets
 import subprocess
 import fitz  # https://pymupdf.readthedocs.io/en/latest/
 from contextlib import contextmanager
+from datetime import datetime
 ######
 from mailing.resources.barcode import BarCodePosition, generate_barcode_image
 
@@ -81,4 +82,9 @@ def format_genre(lang:str, genre:str) -> str :
 
 def format_date(lang:str, date:str) -> str :
     return "2099-12-31"
+
+
+def convert_date(timestamp):
+    d = datetime.utcfromtimestamp(timestamp)
+    return d.strftime('%d %b %Y %H:%M:%S')
         

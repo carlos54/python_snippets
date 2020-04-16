@@ -20,7 +20,7 @@ class TestAppEmailV1(unittest.TestCase):
         r = self.current_client.post(
             f'/{self.version}/email',
             data={
-                "template_id":"email_test",
+                "template_id":"emailtest",
                 "respondents": file_to_transfer,
                 "test_recipients" : "mail1@statec.lu;mail2@statec.lu"
             },

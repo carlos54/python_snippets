@@ -1,0 +1,15 @@
+{
+    "title": "/template GET - DATA RESPONSE SCHEMA VALIDATION",
+    "description": "/template, methods=GET",
+    "type": "array",
+    "items":{
+        "type": "object",
+        "allOf": [{"required": ["id", "name", "modified"]}],
+        "properties":{
+            "name":{"type": "string"},
+            "modified":{"type": "string"},
+            "id":{"type": "string"},
+            "lang":{"type": "string"}
+            }
+    }
+}

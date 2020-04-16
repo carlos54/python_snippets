@@ -93,10 +93,11 @@ def new_print():
         logging.error(f"({job_id}) ABORT - permission mkdir job_work_dir failed")
         abort(500, "OSError, permission mkdir job_work_dir failed") 
     # save json data file received and validaded    
-    data_file = os.path.join(job_work_dir,"data.json")    
-    json_bytes.save(os.path.join(job_work_dir,data_file))  
-    
-       
+    with open(os.path.join(job_work_dir,"data.json"), "x") as f:
+        f.write(json.dumps(respondents))    
+
+
+
     ##### inner function to process one mail 
     def process_respondent(resp_data: Dict[str, object]):
         logging.debug(f"({job_id}) - vars current instance : {json.dumps(resp_data)}")
@@ -159,7 +160,7 @@ def new_print():
     
     ##### process merging
     # init log.json of the job
-    log_job = {'id':job_id, 'success':False, 'file': None, 'respondents' : []} 
+    log_job = {'log_id':job_id, 'id':job_id, 'success':False, 'file': None, 'respondents' : []} 
     merge_filename = ".".join([job_id,"pdf"]) 
     try :
         for r in respondents:
@@ -196,4 +197,6 @@ def new_print():
         response.headers['Content-Disposition'] = f'attachment; filename={merge_filename}'
         
     logging.info(f"({job_id}) - success : {log_job['success']}")
+    
+    # ajouter resume job par email et mettre le fichier en piece jointe
     return response

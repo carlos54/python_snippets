@@ -108,9 +108,9 @@ def new_email():
     if not os.path.exists(job_work_dir):
         logging.error(f"({job_id}) ABORT - permission mkdir job_work_dir failed")
         abort(500, "OSError, permission mkdir job_work_dir failed") 
-    # save json data file received and validaded    
-    data_file = os.path.join(job_work_dir,"data.json")    
-    json_bytes.save(os.path.join(job_work_dir,data_file))  
+    # save json data file received and validaded  
+    with open(os.path.join(job_work_dir,"data.json"), "x") as f:
+        f.write(json.dumps(respondents))
     
        
     ##### inner function to process one mail 
@@ -194,6 +194,8 @@ def new_email():
     r = Response(json.dumps(log_job), mimetype='application/json')
     r.headers['id'] = str(job_id)
     logging.info(f"({job_id}) - success : {log_job['success']}")
+    
+    # ajouter resume job par email
     return r
 
     

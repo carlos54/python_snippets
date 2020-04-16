@@ -21,6 +21,7 @@ class ConfigDefault:
     LOG_DIR = os.path.join(pwd, 'logs/')
     LOG_MODE = "w" # https://docs.python.org/3/library/functions.html#filemodes
     LOG_FILE = "default.log"
+    LANG_ALLOWED = "fr;de;lu;en;pt"
     
 
 class Prod(ConfigDefault):

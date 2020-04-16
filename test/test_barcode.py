@@ -1,7 +1,6 @@
 import unittest
 import os
 import stat
-import shutil
 import secrets
 from mailing.resources.barcode import BarCodePosition, generate_barcode_image
 
