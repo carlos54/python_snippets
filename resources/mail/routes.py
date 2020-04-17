@@ -1,4 +1,4 @@
-from flask import Blueprint, Response, render_template, make_response, abort, request, json, url_for
+from flask import Blueprint, Response, render_template, make_response, abort, request, json, url_for, jsonify
 from jinja2 import TemplateNotFound 
 import os
 import secrets
@@ -10,10 +10,11 @@ from typing import Dict, List
 ##########################
 from mailing.resources.utils import merge_pdf, format_genre, format_date, insert_barcode_in_pdf
 
-
+import time
 
 bp = Blueprint('resource_mail', __name__)
 pwd = os.path.dirname(__file__)
+
 @bp.record
 def copy_appconfig(setup_state):
     bp.config = dict([(key,value) for key,value in setup_state.app.config.items()])
@@ -23,34 +24,63 @@ def copy_appconfig(setup_state):
 
 
 
-@bp.route("/mail/<print_id>", methods=["GET"])
-def info_print(print_id):
-    """ return print log """
-    pass
+@bp.route("/mail/<mail_id>", methods=["GET"])
+def get_mail(mail_id):
+    """ return mail pdf file (Content-Type "application/pdf") 
+    if process statuts is "finished"and the job is success.
+    Other wise return process the status json format
+    status : queued, started, deferred, finished, and failed
+    """
+    log_id = secrets.token_hex(8)
+    logging.info("******** GET /mail - log id : %s", log_id)
+      
+    q = bp.config['mail_rq'] 
+    job = q.fetch_job(mail_id)
+    if not job:
+        logging.error(f"({log_id}) ABORT - mail don't exist : {mail_id}")
+        abort(404, f"ABORT - mail don't exist : {mail_id}")
+    
+    res = {'id':job.get_id(), 
+            'statuts': job.get_status()}
+    
+    #add return object from the mail process to response
+    if job.result:
+        res.update(job.result)
+
+    response = jsonify(res)
+    if job.get_status() == "finished" and res.get('success', False) == True:
+        with open(res.get('file', None), 'rb') as f:
+            binary_pdf = f.read()
+            response = make_response(binary_pdf)
+            response.headers['response-json'] =  json.dumps(res) 
+            response.headers['Content-Type'] = 'application/pdf'
+            response.headers['Content-Disposition'] = f"attachment; filename={res.get('filename', None)}"
+   
+    logging.info(f"({log_id}) - response : {res}")
+    return response
 
 
 @bp.route("/mail", methods=["POST"])
-def new_print():
+def create_mail():
     """ merge template and the respondents file
     needed parameter :
     - "template_id"
     - "respondents" json data (schema mail_validator.schema)
-    => return "application/pdf" as Content-Disposition = attachment
-    response.headers['mail-id'] as 
+    => json with mail id and status
     """
    
-    job_id = secrets.token_hex(8)
-    logging.info("******** /mail  - id : %s", job_id)
+    log_id = secrets.token_hex(8)
+    logging.info("******** POST /mail - log id : %s", log_id)
    
     ##### check post data param to process
     template_id = request.form.get('template_id') 
     if not template_id :
-        logging.error(f"({job_id}) ABORT - Missing data payload - template_id : str")
+        logging.error(f"({log_id}) ABORT - Missing data payload - template_id : str")
         abort(403, "Missing data payload - template_id : str")
 
     json_bytes = request.files.get("respondents")
     if not json_bytes :
-        logging.error(f"({job_id}) ABORT - Missing data payload - respondents : application/json file")
+        logging.error(f"({log_id}) ABORT - Missing data payload - respondents : application/json file")
         abort(403, """Missing data payload 
               - respondents : application/json file""")
           
@@ -59,10 +89,10 @@ def new_print():
         respondents = json.loads(json_bytes.read())
         validate(instance=respondents, schema=bp.config['SCHEMA'])
     except ValidationError:
-        logging.error(f"({job_id}) ABORT -respondents json application/json not valide")
+        logging.error(f"({log_id}) ABORT -respondents json application/json not valide")
         abort(403, "respondents json application/json not valide") 
     except:
-        logging.error(f"({job_id}) ABORT - respondents json application/json file corrupt")
+        logging.error(f"({log_id}) ABORT - respondents json application/json file corrupt")
         abort(403, "respondents json application/json file corrupt") 
 
     # check if all lang have it's template available
@@ -72,35 +102,62 @@ def new_print():
         try:
             render_template(f'{template_id}_{lang}.html')
         except TemplateNotFound:
-            logging.error(f"({job_id}) ABORT - missing template {template_id}_{lang}.html")
+            logging.error(f"({log_id}) ABORT - missing template {template_id}_{lang}.html")
             abort(404, f"missing template {template_id}_{lang}.html")
     
     # check if "id" is unique
     ids = [r.get('id') for r in respondents]
     if len(ids) != len(set(ids)):
-        logging.error(f"({job_id}) ABORT - data issue : field *id* is not unique")
+        logging.error(f"({log_id}) ABORT - data issue : field *id* is not unique")
         abort(403, "data issue : field *id* is not unique")
     
-    logging.info(f"({job_id}) - data valided : {template_id} / respondents : {len(respondents)}")
+    logging.info(f"({log_id}) - data valided : {template_id} / respondents : {len(respondents)}")
     #####
 
     ##### create working job directory
-    job_work_dir = os.path.join(bp.config.get('TMP_DIR'), job_id)
+    job_work_dir = os.path.join(bp.config.get('TMP_DIR'), log_id)
     if not os.path.exists(job_work_dir):
         os.makedirs(job_work_dir)
 
     if not os.path.exists(job_work_dir):
-        logging.error(f"({job_id}) ABORT - permission mkdir job_work_dir failed")
+        logging.error(f"({log_id}) ABORT - permission mkdir job_work_dir failed")
         abort(500, "OSError, permission mkdir job_work_dir failed") 
+        
     # save json data file received and validaded    
     with open(os.path.join(job_work_dir,"data.json"), "x") as f:
-        f.write(json.dumps(respondents))    
+        json.dump(respondents, f, indent=4) 
+
+    ### add job to the api queue for asynchrone execution
+    q = bp.config['mail_rq']
+    params = {
+            'log_id':log_id,
+            'respondents':respondents,
+            'job_work_dir': job_work_dir,
+            'template_id':template_id
+            }
+    job = q.enqueue(process_mail,
+                    result_ttl=60*60*24*360,
+                    description = f"log_id : {log_id}",
+                     **params)
+
+   
+    res = {'id':job.get_id(), 
+            'statuts': job.get_status(),
+            'template_id': template_id}
 
 
+    logging.info(f"({log_id}) - process_mail() add to queue : {res}")
+    return jsonify(res)
 
+
+#RUN in queue asynchron process
+def process_mail(log_id:str, respondents:List,
+                template_id:str, job_work_dir:str) -> Dict[str, object]:
+    
+    
     ##### inner function to process one mail 
     def process_respondent(resp_data: Dict[str, object]):
-        logging.debug(f"({job_id}) - vars current instance : {json.dumps(resp_data)}")
+        logging.debug(f"({log_id}) - vars current instance : {json.dumps(resp_data)}")
         work_dir_resp = os.path.join(job_work_dir, str(resp_data.get('id')))
         os.makedirs(work_dir_resp)
        
@@ -146,57 +203,49 @@ def new_print():
                                             f"{file_path}.html",
                                             f"{file_path}.pdf"],
                                             capture_output=True, text=True)
-            logging.debug(f"({job_id}) - stdout wkhtmltopdf {p_res}")
+            logging.debug(f"({log_id}) - stdout wkhtmltopdf {p_res}")
 
             # note : mettre les barcode en static si c'est toujours les même...
             insert_barcode_in_pdf(pdf_file_path=f"{file_path}.pdf",
                                 tmp_dir=work_dir_resp)
             
+        #merge all lang of respondent 
+        # and move file to root work_dir for the futur total merge
         resp_all_langs_mail_pdf = merge_pdf(dir_path=work_dir_resp)
         shutil.move(resp_all_langs_mail_pdf, job_work_dir)
-        logging.info(f"""({job_id}) - respondent : {resp_data.get('id')} - {resp_all_langs_mail_pdf}""")
+        logging.info(f"""({log_id}) - respondent : {resp_data.get('id')} - {resp_all_langs_mail_pdf}""")
         return resp_all_langs_mail_pdf
     #####
     
+    
     ##### process merging
-    # init log.json of the job
-    log_job = {'log_id':job_id, 'id':job_id, 'success':False, 'file': None, 'respondents' : []} 
-    merge_filename = ".".join([job_id,"pdf"]) 
+    merge_filename = "root_merge_file.pdf"
+    job_res = { 'log_id' : log_id, 
+               'filename': None, 
+               'file': None,
+               'respondents' : [],
+                'template_id': template_id}  
     try :
         for r in respondents:
            log = {'id':r.get('id'),'success':False, 'file': None}
            log['file'] = process_respondent(r)
            if log['file']:
                log['success'] = True
-           log_job['respondents'].append(log)
+           job_res['respondents'].append(log)
         
         merge_file = merge_pdf(dir_path=job_work_dir, file_name=merge_filename)
     except BaseException as e:
-        log_job['success'] = False
-        log_job['error'] = f"ABORT - process_respondent error {r} - {e}"
+        job_res['success'] = False
+        job_res['error'] = f"ABORT - process_respondent error {r} - {e}"
+        
     else :
-        log_job['success'] = True
-        log_job['file'] = merge_filename
+        job_res['success'] = True
+        job_res['file'] = merge_file 
+        job_res['filename'] =  merge_filename
+       
     finally:
         with open(os.path.join(job_work_dir,"log.json"), "w", encoding="utf-8") as f :
-            json.dump(log_job, f, indent=4)
-        
-        if not log_job['success'] :
-            logging.error(f"({job_id}) {log_job['error']}")
-            abort(500, log_job['error'])
-        
-   
-    
-    ##### return pdf
-    with open(merge_file, 'rb') as f:
-        binary_pdf = f.read()
-        response = make_response(binary_pdf)
-        response.headers['id'] = str(job_id)
-        response.headers['log'] = json.dumps(log_job)
-        response.headers['Content-Type'] = 'application/pdf'
-        response.headers['Content-Disposition'] = f'attachment; filename={merge_filename}'
-        
-    logging.info(f"({job_id}) - success : {log_job['success']}")
-    
-    # ajouter resume job par email et mettre le fichier en piece jointe
-    return response
+            json.dump(job_res, f, indent=4)
+           
+    logging.info(f"({log_id}) - process_mail() asynchrone exec finished :  {job_res}")   
+    return job_res
