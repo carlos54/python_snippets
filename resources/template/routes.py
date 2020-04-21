@@ -4,7 +4,7 @@ import os
 import secrets
 import re
 import string 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup # type: ignore
 from redis import Redis
 
 ####

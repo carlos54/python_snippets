@@ -1,4 +1,5 @@
 import os
+from typing import NewType, Type
 
 ## SMTP server
 #app.config['MAIL_SERVER'] : default ‘localhost’
@@ -46,4 +47,12 @@ class UnitTest(ConfigDefault):
     RQ_IS_ASYNC = False
     pass
 
-    
+
+NewType('T', ConfigDefault)
+def get_config(key_env:str) -> Type[ConfigDefault] :
+    conf = {
+    'production':Prod,
+    'testing':Test,
+    'development':Dev
+    }
+    return conf.get(key_env.casefold(), Dev)

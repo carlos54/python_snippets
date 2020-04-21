@@ -1,5 +1,5 @@
 
-import fitz 
+import fitz  # type: ignore
 import glob
 import os
 import secrets

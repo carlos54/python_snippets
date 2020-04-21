@@ -2,7 +2,7 @@ from flask import Flask
 import logging
 import os
 from redis import Redis
-from rq import Queue
+from rq import Queue # type: ignore
 
 
 def create_app(ConfigCls):
@@ -26,6 +26,7 @@ def create_app(ConfigCls):
                     format='%(asctime)s %(message)s',
                     level=logging.INFO, filemode=app.config['LOG_MODE'])
 
+    logging.info(f"*********** MAILING API READY TO WORK : {app.config}")
 
     # api v1 
     from mailing.resources.mail.routes import bp as resource_mail

@@ -1,12 +1,12 @@
 
 from flask import Blueprint, Response, render_template, make_response, abort, request, json, jsonify, url_for
-from flask_mail import Mail, Message
+from flask_mail import Mail, Message  # type: ignore
 import os
 import secrets
 import logging
-from jsonschema import validate, ValidationError
-from bs4 import BeautifulSoup
-from typing import Dict, List
+from jsonschema import validate, ValidationError  # type: ignore
+from bs4 import BeautifulSoup # type: ignore
+from typing import Dict, List, Tuple
 ##########################
 from mailing.resources.utils import format_genre, format_date
 
@@ -160,6 +160,8 @@ def create_email():
     
 
 
+
+
 #RUN trougth app queue (asynchron process)
 def process_email(log_id:str, respondents:List, template_id:str,
                   test_recipients:List, job_work_dir:str,
@@ -167,11 +169,12 @@ def process_email(log_id:str, respondents:List, template_id:str,
     
     
     ##### inner function to process one mail 
-    def process_respondent(resp_data: Dict[str, object], test_mode:bool):
+    def process_respondent(resp_data, test_mode:bool):
 
         ### process apply_vars in all apply_lang required
         doc_data = {}
-        for var in resp_data.get('apply_vars'):
+        apply_vars : List[dict] = resp_data.get('apply_vars')
+        for var in apply_vars:
             doc_data[var.get('name', 'none')] = var.get('value', 'none')
         
         ### flag the variable who are lang_sensitive and need format reprocessing 
@@ -223,7 +226,7 @@ def process_email(log_id:str, respondents:List, template_id:str,
     all_success = True
     # test_mode : allow to generate one mail result to test_recipients
     test_mode = (len(test_recipients) > 0)
-    job_res = {'log_id':log_id, 'success':False,
+    job_res : Dict = {'log_id':log_id, 'success':False,
                'test_mode' :test_mode, 'respondents' : []} 
    
     for r in respondents:

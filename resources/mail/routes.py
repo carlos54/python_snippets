@@ -5,7 +5,7 @@ import secrets
 import logging
 import shutil
 import subprocess
-from jsonschema import validate, ValidationError
+from jsonschema import validate, ValidationError  # type: ignore
 from typing import Dict, List
 ##########################
 from mailing.resources.utils import merge_pdf, format_genre, format_date, insert_barcode_in_pdf
@@ -156,14 +156,15 @@ def process_mail(log_id:str, respondents:List,
     
     
     ##### inner function to process one mail 
-    def process_respondent(resp_data: Dict[str, object]):
+    def process_respondent(resp_data):
         logging.debug(f"({log_id}) - vars current instance : {json.dumps(resp_data)}")
         work_dir_resp = os.path.join(job_work_dir, str(resp_data.get('id')))
         os.makedirs(work_dir_resp)
        
         ### create the dict of apply_vars
         doc_data = {}
-        for var in resp_data.get('apply_vars'):
+        apply_vars : List[dict] = resp_data.get('apply_vars')
+        for var in apply_vars:
             doc_data[var.get('name', 'none')] = var.get('value', 'none')
         
         ### flag the variable who are lang_sensitive and need format reprocessing 
@@ -220,7 +221,7 @@ def process_mail(log_id:str, respondents:List,
     
     ##### process merging
     merge_filename = "root_merge_file.pdf"
-    job_res = { 'log_id' : log_id, 
+    job_res : Dict = { 'log_id' : log_id, 
                'filename': None, 
                'file': None,
                'respondents' : [],

@@ -85,10 +85,10 @@ class BarCodePosition:
                  page_height:float = 842) -> None:
         self.barcode_heigth = barcode_heigth
         self.barcode_width = barcode_width
-        self.x0 = 0
-        self.y0 = 0
-        self.x1 = 0
-        self.y1 = 0
+        self.x0 = 0.0
+        self.y0 = 0.0
+        self.x1 = 0.0
+        self.y1 = 0.0
         self.x_margin = x_margin
         self.y_margin = y_margin
         self.page_with = page_with
@@ -104,11 +104,11 @@ class BarCodePosition:
             self.__calculate_bottom_right()
 
     @property
-    def coordinate(self) -> Dict[str, int]:
-        return dict(x0=self.x0,
-                    x1=self.x1,
-                    y0=self.y0,
-                    y1=self.y1)
+    def coordinate(self) -> Dict[str, float]:
+        return {'x0':self.x0,
+                    'x1':self.x1,
+                    'y0':self.y0,
+                    'y1':self.y1}
 
     def __calculate_up_left(self) -> None:
         self.x0 = 0 + self.x_margin

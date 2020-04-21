@@ -1,2 +1,3 @@
 service redis-server start
-cd /app/; python3 -m mailing.run
+cp /app/mailing/wsgi.ini /app/
+cd /app/; uwsgi wsgi.ini
