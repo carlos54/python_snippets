@@ -5,6 +5,8 @@ import secrets
 import re
 import string 
 from bs4 import BeautifulSoup
+from redis import Redis
+
 ####
 from mailing.resources.utils import convert_date
 
@@ -22,7 +24,17 @@ def template_exist(template_name:str) -> bool:
             return True
     return False
     
-    
+@bp.route("/", methods=["GET"])
+def home():
+    r = Redis()
+    vr = r.execute_command('INFO')['redis_version']
+    q_email = bp.config['email_rq']
+    q_mail = bp.config['mail_rq']
+    return f"""api working - Redis : {vr} 
+    - Job in email queue : {len(q_email)} 
+    - Job in mail queue : {len(q_mail)} 
+    """
+      
 @bp.route("/template", methods=["GET"])
 def list_template():
     """ List all template avalaible

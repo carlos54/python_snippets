@@ -28,18 +28,19 @@ def insert_barcode_in_pdf(pdf_file_path: str,
     #### inner function
     def insert_barcode(page, payload, barcode_position):
         _, _, w, h = page.CropBox
-        #print(f"********CropBox{page.CropBox}")
-        #print(f"********MediaBox {page.MediaBox}")
-        #print(f"********barcaode {p.coordinate}")
         p = BarCodePosition(postion=barcode_position, page_height=h,
                             page_with=w)
        
+        #print(f"********CropBox{page.CropBox}")
+        #print(f"********MediaBox {page.MediaBox}")
+        #print(f"********barcaode {p.coordinate}")
+ 
         page_zone = fitz.Rect(p.x0, p.y0, p.x1, p.y1)
         img_path = generate_barcode_image(barcode_payload=payload,
                                           tmp_dir=tmp_dir)
-      
-        page.insertImage(rect=page_zone, filename=img_path,
-                         keep_proportion=False)
+        if img_path:
+            page.insertImage(rect=page_zone, filename=img_path,
+                            keep_proportion=False)
     ####
     
     with open_pdf(pdf_file_path) as pdf:

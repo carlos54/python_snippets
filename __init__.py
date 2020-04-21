@@ -9,7 +9,7 @@ def create_app(ConfigCls):
    
     app = Flask(__name__)
     app.config.from_object(ConfigCls)
-    
+     
     rq = Queue("mail", is_async=app.config.get('RQ_IS_ASYNC'),
                connection=Redis.from_url('redis://'), 
                default_timeout=60*10)#10 mins

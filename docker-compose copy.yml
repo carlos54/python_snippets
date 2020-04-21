@@ -1,0 +1,12 @@
+version : '3.3'
+
+services :
+    flask_mailing:
+        image: apimailing:latest
+        volumes:
+            - /share/src/statec/mailing/:/app/mailing/
+        expose:
+            - 5050
+        ports:
+            - 8080:5050
+        command: /bin/sh -c "/app/mailing/start.sh"

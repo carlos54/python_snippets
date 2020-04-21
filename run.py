@@ -7,6 +7,6 @@ app = create_app(Prod)
 if __name__ == '__main__':
     #https://flask.palletsprojects.com/en/1.1.x/api/#flask.Flask.run
     #run(host=None, port=None, debug=None, load_dotenv=True, **options)
-    app.run(debug=True)
-    
+    app.run(host='0.0.0.0')
+   
 # run the api : python -m mailing.run (pwd from outsite package)

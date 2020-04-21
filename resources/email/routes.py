@@ -211,8 +211,8 @@ def process_email(log_id:str, respondents:List, template_id:str,
 
         msg = Message(email_subject, recipients=recipients)
         msg.html = html
+        #configurer serveur SMTP
         #mail.send(msg)
-       
             
         logging.info(f"({log_id}) - respondent : {resp_data.get('id')} - EMAIL: {file_path}")
     #####
@@ -228,9 +228,8 @@ def process_email(log_id:str, respondents:List, template_id:str,
    
     for r in respondents:
         r_log = {'id':r.get('id'),'success':False, 'recipients': r.get('recipients', [])}
-        process_respondent(resp_data=r, test_mode=test_mode)
         try :
-            _ = "bbala"
+            process_respondent(resp_data=r, test_mode=test_mode)
         except BaseException as e:
             logging.error(f"({log_id}) - error - respondent : {r} - {e}")
             r_log['success'] = False

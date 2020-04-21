@@ -1,0 +1,20 @@
+version : '3.3'
+
+services :
+    container_api:
+        image: apimailing:latest
+        volumes:
+            - /share/src/statec/mailing/:/app/mailing/
+        expose:
+            - 5050
+        command: /bin/sh -c "/app/mailing/start.sh"
+        
+
+    container_webserver:
+        image: nginx:alpine
+        volumes:
+            - /share/src/statec/mailing/nginx.conf:/etc/nginx/conf.d/default.conf
+        ports:
+            - "80:80"
+        links:
+            - container_api:container_api

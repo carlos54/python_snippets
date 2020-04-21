@@ -54,17 +54,14 @@ def generate_barcode_image(
         raise OSError
 
     file_path = os.path.join(tmp_dir, secrets.token_hex(8)+".png")
-    try:
-        barcode_image = treepoem.generate_barcode(barcode_type=barcode_format,
-                                                  data=barcode_payload)
-        barcode_image.convert('1').save(file_path)
 
-        if not os.path.isfile(file_path):
-            raise BaseException("error during barcode generation")
-
-    except BaseException:
-        file_path = ""
-
+    barcode_image = treepoem.generate_barcode(barcode_type=barcode_format,
+                                                data=barcode_payload)
+    #print(f"******barcode_image:{barcode_image}") 
+    barcode_image.convert('1').save(file_path)
+    if not os.path.isfile(file_path):
+        raise BaseException("error during barcode generation")
+    
     return file_path
 
 
